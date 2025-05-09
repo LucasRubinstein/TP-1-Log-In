@@ -1,1 +1,141 @@
+import 'package:flutter/material.dart';
 
+void main() {
+  runApp(MainApp());
+}
+
+class MainApp extends StatefulWidget {
+  MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class User1 {
+  String username = 'lucky26';
+  String password = '26611';
+}
+
+final _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+
+class _MainAppState extends State<MainApp> {
+  TextEditingController inputUserController = TextEditingController();
+  TextEditingController inputPasswordController = TextEditingController();
+  String inputUserText = '';
+  String inputPasswordText = '';
+  bool passwordVisible = false;
+
+  User1 registedUser = User1();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      scaffoldMessengerKey: _scaffoldKey,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        scaffoldBackgroundColor: const Color(0xFFF5F6FA),
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(fontFamily: 'Arial'),
+        ),
+      ),
+      home: Scaffold(
+        body: Center(
+          child: SingleChildScrollView(
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              const Text("¡Qué bueno verte!",
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.indigo,
+                  )),
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: TextField(
+                  controller: inputUserController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    labelText: 'Ingrese su nombre de usuario',
+                    prefixIcon: const Icon(Icons.person),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: TextField(
+                  controller: inputPasswordController,
+                  obscureText: !passwordVisible,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    labelText: 'Introduzca su contraseña',
+                    prefixIcon: const Icon(Icons.lock),
+                    filled: true,
+                    fillColor: Colors.white,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        passwordVisible ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          passwordVisible = !passwordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo,
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 4,
+                ),
+                onPressed: () {
+                  setState(() {
+                    inputUserText = inputUserController.text;
+                    inputPasswordText = inputPasswordController.text;
+                    if ((inputUserText == registedUser.username) &&
+                        (inputPasswordText == registedUser.password)) {
+                      _scaffoldKey.currentState!.showSnackBar(
+                        const SnackBar(
+                          content: Text("¡Inicio de sesión exitoso!"),
+                          backgroundColor: Colors.green,
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    } else {
+                      _scaffoldKey.currentState!.showSnackBar(
+                        const SnackBar(
+                          content: Text('Nombre de usuario o clave incorrecta. Inténtelo nuevamente.'),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    }
+                  });
+                },
+                child: const Text(
+                  'Continuar',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+}
